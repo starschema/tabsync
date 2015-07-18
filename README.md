@@ -1,10 +1,10 @@
-﻿# tabsync
+﻿# Tableau Server - LDAP Synchronization
 
-FIXME: description
+TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any LDAP server 
 
 ## Installation
 
-Download from http://example.com/FIXME.
+
 
 cd C:\Program Files\Java\jdk1.8.0_45\jre\lib\security
 ..\..\bin\keytool -import -alias bianalyticsstg -file c:\Users\501911688\Downloads\bianalyticsstg_corporate_ge_com.crt  -keystore cacerts
