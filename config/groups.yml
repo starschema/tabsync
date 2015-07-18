@@ -1,0 +1,32 @@
+﻿ldap:
+  host: ldap.corporate:2392
+  username: username
+  password: password
+
+ad:
+  domain: local
+
+email:
+  from: corp.tableau.qa@email.com
+  to: admins@email.com
+  subject: Tableau Sync QA Report
+
+tableau:
+  url: "http://tableau.server/"
+  version: 9
+  username: "admin"
+  password: "Admin"
+
+sites:
+  - name: "Site 1"
+    group_mapping: 
+      - ldap: g00478723
+        tableau: Tableau Group 1
+      - ldap: g00485309
+        tableau: Tableau Group 2
+  - name: "Site 2"
+    group_mapping: 
+      - ldap: g00478723
+        tableau: Tableau Group 3
+      - ldap: g00485309
+        tableau: Tableau Group 4
