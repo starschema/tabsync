@@ -38,12 +38,15 @@ FIXME: explanation
       host: ldap.domain.com:389
       username: administrator
       password: administrator
+      
     ad:
       domain: local
+      
     email:
       from: tableau.sync.script@company.com
       to: john.doe@company.com
       subject: Tableau Sync Script Report
+      
     tableau:
       url: "http://127.0.0.1:8000/"
       version: 9
