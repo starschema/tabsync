@@ -85,10 +85,6 @@ And finally simply execute the uberjar you created earlier:
     $ java -jar tabsync-0.1.0-standalone.jar [args]
 
 
-## Options
-
-FIXME: listing of options this app accepts.
-
 ## Examples
 
 ```clojure
@@ -98,16 +94,6 @@ FIXME: listing of options this app accepts.
   (println parameters))
 ```
 ...
-
-### Bugs
-
-
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
 
 ## License
 
