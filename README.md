@@ -86,9 +86,17 @@ FIXME: listing of options this app accepts.
 
 ## Examples
 
+```clojure
+(defn test-syntax
+  "testing syntax"
+  [parameters]
+  (println parameters))
+```
 ...
 
 ### Bugs
+
+
 
 ...
 
