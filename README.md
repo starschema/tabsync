@@ -59,7 +59,9 @@ FIXME: explanation
           - ldap: grp54321
             tableau: LDAP Group 2
 
-Once the config file is saved you need to make sure that you are pointing to the right java installation:
+* Make sure that you are pointing to the right Java installation:
+
+<b></b>
 
     $ java -version
     java version "1.8.0_31"
