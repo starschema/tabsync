@@ -17,7 +17,7 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 * LDAP Configuration Changes:
 
-The bind-dn format listed in the config file is specific to our environment and is recommended to be modified to your format. We suggest creating two functions. One for parsing a full name & email map, and another for parsing the user list based on group id(s).
+The bind-dn format listed in the config file is specific to our environment and is recommended to be modified to your format. We also suggest modifying the functions 'tabsync.ldap/get-user-info' and 'tabsync.ldap/get-users-from-group'. The former for parsing a full name & email map, and the latter for parsing the user list based on group id(s).
 
 <b></b>
 
