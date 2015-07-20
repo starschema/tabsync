@@ -6,10 +6,10 @@
 
 (defn connect-ldap-server
   "Creates connection to LDAP server"
-  [[host username password]]
+  [[host username password dn]]
   (def ldap-server
     (ldap/connect {:host     host
-                   :bind-dn  (str "CN=" username ",ou=All Businesses,dc=CDIAD,dc=corporate,dc=com")
+                   :bind-dn  (str "CN=" username "," dn)
                    :password password
                    })))
 
