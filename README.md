@@ -38,7 +38,7 @@ Wherever you place the executable jar file it is recommended that you create a d
      to: john.doe@company.com
      subject: Tableau Sync Script Report
     tableau:
-      url: "http://3.34.218.187:8000/"
+      url: "http://127.0.0.1:8000/"
       version: 9
       username: tableauadmin
       password: password
