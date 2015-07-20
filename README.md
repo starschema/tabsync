@@ -19,9 +19,9 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 * LDAP Changes:
 
-* Create an uberjar from the source:<b></b>
+* Create an uberjar from the source:
 
-
+<b></b>
 
 
     $ git clone https://github.com/starschema/tabsync.git
