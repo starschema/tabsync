@@ -17,10 +17,6 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 * LDAP Changes:
 
-## Usage
-
-FIXME: explanation
-
 * Create an uberjar from source:
 
 <b></b>
@@ -29,6 +25,10 @@ FIXME: explanation
     $ git clone https://github.com/starschema/tabsync.git
     $ cd tabsync
     $ lein uberjar
+
+## Usage
+
+FIXME: explanation
 
 * Create a directory called 'config' in the root of your newly created jar executable, and make sure to place a file called 'groups.yml' under the same directory. Make sure to follow the formatting pattern:
 
