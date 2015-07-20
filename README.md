@@ -76,8 +76,6 @@ If it is not pointing to Java version 1.8 then you need to set it:
 
 And finally simply execute the uberjar you created earlier:
 
-
-
     $ java -jar tabsync-0.1.0-standalone.jar [args]
 
 ## Usage
