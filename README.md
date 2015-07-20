@@ -41,23 +41,23 @@ FIXME: explanation
     ad:
       domain: local
     email:
-     from: tableau.sync.script@company.com
-     to: john.doe@company.com
-     subject: Tableau Sync Script Report
+      from: tableau.sync.script@company.com
+      to: john.doe@company.com
+      subject: Tableau Sync Script Report
     tableau:
       url: "http://127.0.0.1:8000/"
       version: 9
       username: tableauadmin
       password: password
     sites:
-    - name: Site1
-      group_mapping:
-        - ldap: grp12345
-          tableau: LDAP Group 1
-    - name: Site2
-      group_mapping:
-        - ldap: grp54321
-          tableau: LDAP Group 2
+      - name: Site1
+        group_mapping:
+          - ldap: grp12345
+            tableau: LDAP Group 1
+      - name: Site2
+        group_mapping:
+          - ldap: grp54321
+            tableau: LDAP Group 2
 
 Once the config file is saved you need to make sure that you are pointing to the right java installation:
 
