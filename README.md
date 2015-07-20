@@ -52,6 +52,7 @@ FIXME: explanation
       version: 9
       username: tableauadmin
       password: password
+      
     sites:
       - name: Site1
         group_mapping:
