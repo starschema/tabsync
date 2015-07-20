@@ -20,7 +20,12 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 FIXME: explanation
 
-    $ java -jar tabsync-0.1.0-standalone.jar [args]
+In order to start using the LDAP Synchronization script we recommend creating an uberjar from the source.
+
+    git clone https://github.com/starschema/tabsync.git
+    cd tabsync
+    lein uberjar
+    java -jar tabsync-0.1.0-standalone.jar [args]
 
 ## Options
 
