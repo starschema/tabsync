@@ -17,6 +17,10 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 * LDAP Changes:
 
+## Usage
+
+FIXME: explanation
+
 * Create an uberjar from source:
 
 <b></b>
@@ -64,12 +68,12 @@ Once the config file is saved you need to make sure that you are pointing to the
 
 If it is not pointing to Java version 1.8 then you need to set it:
 
-## Windows
+### Windows
 
     $ SET JAVA_HOME = c:\Program Files\Java_1.8
     $ SET PATH = %PATH%;%JAVA_HOME%\bin
 
-## Linux
+### Linux
 
     $ export JAVA_HOME=/usr/bin/java
     $ export PATH=$PATH:$JAVA_HOME/bin
@@ -78,9 +82,6 @@ And finally simply execute the uberjar you created earlier:
 
     $ java -jar tabsync-0.1.0-standalone.jar [args]
 
-## Usage
-
-FIXME: explanation
 
 ## Options
 
