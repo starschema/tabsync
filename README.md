@@ -66,19 +66,19 @@ If it is not pointing to Java version 1.8 then you need to set it:
 
 # Windows
 
-    SET JAVA_HOME = c:/Program Files/Java_1.8
-    SET PATH = %PATH%;%JAVA_HOME%\bin
+    $ SET JAVA_HOME = c:/Program Files/Java_1.8
+    $ SET PATH = %PATH%;%JAVA_HOME%\bin
 
 # Linux
 
-    export JAVA_HOME=/usr/bin/java
-    export PATH=$PATH:$JAVA_HOME/bin
+    $ export JAVA_HOME=/usr/bin/java
+    $ export PATH=$PATH:$JAVA_HOME/bin
 
 And finally simply execute the uberjar you created earlier:
 
 
 
-    java -jar tabsync-0.1.0-standalone.jar [args]
+    $ java -jar tabsync-0.1.0-standalone.jar [args]
 
 ## Options
 
