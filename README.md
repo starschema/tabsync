@@ -10,8 +10,8 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 3) Import the certificate:
 
-cd C:\Program Files\Java\jdk1.8.0_45\jre\lib\security
-..\..\bin\keytool -import -alias mycertificate -file c:\Users\JohnDoe\Downloads\mycertificate_at_domain_com.crt  -keystore cacerts
+    cd C:\Program Files\Java\jdk1.8.0_45\jre\lib\security
+    ..\..\bin\keytool -import -alias mycertificate -file c:\Users\JohnDoe\Downloads\mycertificate_at_domain_com.crt  -keystore cacerts
 
 ## Usage
 
