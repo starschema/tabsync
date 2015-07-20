@@ -38,6 +38,7 @@ FIXME: explanation
       host: ldap.domain.com:389
       username: administrator
       password: administrator
+      binddn: "ou=Sample,dc=AD,dc=company,dc=com"
       
     ad:
       domain: local
