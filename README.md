@@ -11,8 +11,8 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 3) Import the certificate:
 
 
-    cd C:\Program Files\Java\jdk1.8.0_45\jre\lib\security
-    ..\..\bin\keytool -import -alias mycertificate -file c:\Users\JohnDoe\Downloads\mycertificate_company_com.crt  -keystore cacerts
+    $ cd C:\Program Files\Java\jdk1.8.0_45\jre\lib\security
+    $ ..\..\bin\keytool -import -alias mycertificate -file c:\Users\JohnDoe\Downloads\mycertificate_company_com.crt  -keystore cacerts
 
 4) LDAP Changes:
 
@@ -22,9 +22,9 @@ FIXME: explanation
 
 In order to start using the LDAP Synchronization script we recommend creating an uberjar from the source:
 
-    git clone https://github.com/starschema/tabsync.git
-    cd tabsync
-    lein uberjar
+    $ git clone https://github.com/starschema/tabsync.git
+    $ cd tabsync
+    $ lein uberjar
 
 Wherever you place the executable jar file it is recommended that you create a directory called 'config' in the same place. The next step is to create a 'groups.yml' file under the 'config' directory and format it like:
 
@@ -55,7 +55,10 @@ Wherever you place the executable jar file it is recommended that you create a d
 
 Once the config file is saved you need to make sure that you are pointing to the right java installation:
 
-    java -version
+    $ java -version
+    java version "1.8.0_31"
+    Java(TM) SE Runtime Environment (build 1.8.0_31-b13)
+    Java HotSpot(TM) 64-Bit Server VM (build 25.31-b07, mixed mode)
 
 If it is not pointing to Java version 1.8 then you need to set it:
 
