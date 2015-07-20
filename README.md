@@ -66,7 +66,7 @@ If it is not pointing to Java version 1.8 then you need to set it:
 
 # Windows
 
-    $ SET JAVA_HOME = c:/Program Files/Java_1.8
+    $ SET JAVA_HOME = c:\Program Files\Java_1.8
     $ SET PATH = %PATH%;%JAVA_HOME%\bin
 
 # Linux
