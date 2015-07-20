@@ -15,6 +15,8 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
     $ ..\..\bin\keytool -import -alias mycertificate -file c:\Users\JohnDoe\Downloads\mycertificate_company_com.crt  -keystore cacerts
 
 4) LDAP Changes:
+ 
+FIXME:
 
 ## Usage
 
@@ -62,15 +64,12 @@ Once the config file is saved you need to make sure that you are pointing to the
 
 If it is not pointing to Java version 1.8 then you need to set it:
 
-* Windows
-
+# Windows
 
     SET JAVA_HOME = c:/Program Files/Java_1.8
     SET PATH = %PATH%;%JAVA_HOME%\bin
 
-
-* Linux
-
+# Linux
 
     export JAVA_HOME=/usr/bin/java
     export PATH=$PATH:$JAVA_HOME/bin
