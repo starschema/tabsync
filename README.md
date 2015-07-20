@@ -15,7 +15,13 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
     $ cd C:\Program Files\Java\jdk1.8.0_45\jre\lib\security
     $ ..\..\bin\keytool -import -alias mycertificate -file c:\Users\JohnDoe\Downloads\mycertificate_company_com.crt  -keystore cacerts
 
-* LDAP Changes:
+* LDAP Configuration Changes:
+
+The bind-dn format listed in the config file is specific to our environment and is recommended to be modified to your format. We suggest creating two functions. One for parsing a full name & email map, and another for parsing the user list based on group id(s).
+
+<b></b>
+
+
 
 * Create an uberjar from source:
 
@@ -28,7 +34,6 @@ TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any
 
 ## Usage
 
-FIXME: explanation
 
 * Create a directory called 'config' in the root of your newly created jar executable, and make sure to place a file called 'groups.yml' under the same directory. Make sure to follow the formatting pattern:
 
