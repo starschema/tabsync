@@ -9,7 +9,7 @@
   [[host username password]]
   (def ldap-server
     (ldap/connect {:host     host
-                   :bind-dn  (str "CN=" username ",ou=All Businesses,dc=CDIAD,dc=corporate,dc=com")
+                   :bind-dn  username
                    :password password
                    })))
 
