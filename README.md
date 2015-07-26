@@ -1,4 +1,4 @@
-﻿# Tableau Server - LDAP Synchronization
+﻿# Tableau Server - LDAP Synchronization [![Build Status](https://travis-ci.org/starschema/tabsync.svg?branch=master)](https://travis-ci.org/starschema/tabsync)
 
 TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any LDAP server. It synchronizes LDAP groups with Tableau groups. 
 
