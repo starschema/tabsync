@@ -6,25 +6,31 @@
 
 (defn connect-ldap-server
   "Creates connection to LDAP server"
-  [[host username password]]
+  [[host ssl username password]]
+  (log/info "SSL enabled: " ssl)
   (def ldap-server
     (ldap/connect {:host     host
-                   :bind-dn  username
+                   :ssl?     ssl
+                   :bind-dn  (str "CN=" username ",ou=All Businesses,dc=CDIAD,dc=GE,dc=com")
+;;                   :bind-dn  (str "gessouid=" username ",ou=geworker,o=ge.com")
                    :password password
                    })))
 
 (defn beautify-display-name
-  "This function removes LDAP specific display name suffix"
+  "This function removes GE specific display name suffix"
   [fullname]
-  (str/trim (first (str/split fullname #"\(") )))
+  (str/trim (first (str/split fullname #"\("))))
 
 (defn get-user-info
   "Gets the user's SSO & email address"
   [sso]
   (let
-    [user-info (ldap/get ldap-server (str "CN=" sso ",ou=All Businesses,dc=CDIAD,dc=corporate,dc=com"))]
+    [user-info (ldap/get ldap-server (str "CN=" sso ",ou=All Businesses,dc=CDIAD,dc=GE,dc=com"))]
     (log/debug user-info)
-    {:sso (get user-info :employeeNumber) :name (beautify-display-name (get user-info :displayName))   :mail (get user-info :mail)}))
+    {:sso  (get user-info :employeeNumber)
+     :name (beautify-display-name (or (get user-info :displayName) (get user-info :geFullName) "Unknown"))
+     :mail (or (get user-info :mail) (str sso "@mail.ad.ge.com"))}))
+
 
 ;; (defn get-users-from-group
 ;;   "Gets the list of users associated to each LDAP group"
@@ -48,7 +54,7 @@
   "This function parses the ldap group names from yaml"
   [config-file]
   (map (fn [entry] (get entry :ldap))
-    (get (yaml/parse-string (slurp config-file)) :group_mapping)))
+       (get (yaml/parse-string (slurp config-file)) :group_mapping)))
 
 
 
@@ -63,30 +69,39 @@
   ;; Three-arg version is for the recursion and returns a set
   ([group-id member-list group-list]
     (log/info "[LDAP] Getting users for ldap group " group-id)
-    (let [group-info (ldap/get ldap-server (str "CN=" group-id ",OU=Groups,DC=CDIAD,dc=corporate,dc=com"))
-            ;; create a list of CNs from the response
-            cn-groups (->> (get group-info :member)
-                        (list)
-                        (flatten)
-                        (map #(second (re-find #"CN=([a-zA-Z0-9]+{9})" %)))
-                        (group-by #(= (get % 0) \g)))
+    (try
+      (let [group-info (ldap/get ldap-server (str "CN=" group-id ",OU=Groups,DC=CDIAD,dc=corporate,dc=com"))
+              ;; create a list of CNs from the response
+              cn-groups (->> (get group-info :member)
+                          (list)
+                          (flatten)
+                          (map #(second (re-find #"CN=([a-zA-Z0-9]+{9})" %)))
+                          (group-by #(= (get % 0) \g)))
 
-            ;; the members of the current group
-            members (get cn-groups false)
-            ;; the sub-groups of the current group
-            groups (get cn-groups true)
-            ;; find the groups that aren't yet processed
-            groups-to-add (filter #(not (contains? group-list %)) groups)
-            ;; build a list of groups we've already seen to not process them again
-            new-group-list (clojure.set/union group-list (set groups))
+              ;; the members of the current group
+              members (get cn-groups false)
+              ;; the sub-groups of the current group
+              groups (get cn-groups true)
+              ;; find the groups that aren't yet processed
+              groups-to-add (filter #(not (contains? group-list %)) groups)
+              ;; build a list of groups we've already seen to not process them again
+              new-group-list (clojure.set/union group-list (set groups))
 
-            ; combine the members with the function input members list to start the call
-            initial-member-list (clojure.set/union member-list (set members))]
+              ; combine the members with the function input members list to start the call
+              initial-member-list (clojure.set/union member-list (set members))]
 
-            (log/info "[LDAP:" group-id "] Found " (count members) " members in this group, total member count is at " (count initial-member-list ))
-            (log/info "[LDAP:" group-id "] Found " (count groups) " sub-groups, adding " (count groups-to-add) " sub-groups after duplicate checks:" groups-to-add)
-            (reduce
-              (fn [current-member-list group-to-add]
-                  (get-users-from-group group-to-add current-member-list new-group-list))
-              initial-member-list groups-to-add))))
+              (log/info "[LDAP:" group-id "] Found " (count members) " members in this group, total member count is at " (count initial-member-list ))
+              (log/info "[LDAP:" group-id "] Found " (count groups) " sub-groups, adding " (count groups-to-add) " sub-groups after duplicate checks:" groups-to-add)
+              (reduce
+                (fn [current-member-list group-to-add]
+                    (get-users-from-group group-to-add current-member-list new-group-list))
+                initial-member-list groups-to-add))
+
+      (catch Throwable e
+            (log/debug e)
+            ;(log/error (type e) ": " (.getMessage e))
+            (log/error "DL does not exist: " group-id)
+            '()))
+
+              ))
 

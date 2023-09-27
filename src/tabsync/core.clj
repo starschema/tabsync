@@ -12,13 +12,13 @@
   (:use [tabsync.ldap]))
 
 ;; Constant for yaml configuration file
-(def yaml-file "./config/groups.yml")
+(def yaml-file "./config/prod-groups.yml")
 
 (def config-vars (yaml/parse-string (slurp yaml-file)))
 
 (defn send-email
-  [email-params]
-  (postal.core/send-message {:host "localhost"}
+  [smtp email-params]
+  (postal.core/send-message {:host smtp}
                             (merge email-params
                                    {:body
                                     (str
@@ -44,7 +44,7 @@
 (defn return-tableau-users
   [session tableau-group]
   (log/info "Getting users for TABLEAU group: " tableau-group)
-  (tableau/get-users-from-tableau-group session tableau-group))
+  (vals (tableau/get-users-from-tableau-group session tableau-group)))
 
 (defn synchronize-site
   "This function creates a list for tableau and a list for ldap groups.
@@ -66,14 +66,15 @@
                   (set (return-tableau-users tableau-session (get group :tableau)))
                   (set (return-ldap-users (get group :ldap)))
                   )]
-            (log/debug "Group differences " difference)
-            ;(tabsync.tableau/remove-users-from-group
-            ;  tableau-session
-            ;  (get group :tableau)
-            ;  (first difference))
+            (log/info "Group differences " difference)
+            (tabsync.tableau/remove-users-from-group
+              tableau-session
+              (get group :tableau)
+              (first difference))
             (tabsync.tableau/add-users-to-site-and-group
               tableau-session
               (get group :tableau)
+              (get group :site-role)
               (second difference))))
         (get site :group_mapping)))
     (tapi/signout tableau-session)))
@@ -100,13 +101,16 @@
       (log/debug "Critical problem " (ex-data e))
       )
     (catch Exception e
-      (log/error (.getMessage e))
-      (log/debug (.getStackTrace e))
+      (log/fatal (.getMessage e))
+      (.printStackTrace e)
+      (log/error e)
+      (def szopsz e)
+      (log/error (.getStackTrace e))
       )
     )
 
   (log/debug "Sending out email")
-  (send-email (get config-vars :email))
+  (send-email  (get config-vars :smtp) (get config-vars :email))
   ;(shutdown-agents)
   )
 

@@ -3,7 +3,6 @@ FROM adoptopenjdk/openjdk8
 WORKDIR /usr/src/project
 RUN apt-get update && apt-get install -y vim
 
-COPY . .
 
 
 RUN curl -O "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein" && \
@@ -15,3 +14,6 @@ RUN curl -O "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/
 ENV LEIN_HOME="/opt/lein"
 ENV PATH="$LEIN_HOME:$PATH"
 
+
+# Copy the app code for building
+COPY . .

@@ -1,0 +1,30 @@
+ldap:
+  host: ldap.domain.com:389
+  username: "cn=administrator,ou=Sample,dc=AD,dc=company,dc=com"
+  password: administrator
+
+ad:
+  domain: local
+
+email:
+  from: tableau.sync.script@company.com
+  to: john.doe@company.com
+  subject: Tableau Sync Script Report
+
+tableau:
+  url: "http://127.0.0.1:8000/"
+  version: 9
+  username: tableauadmin
+  password: password
+
+sites:
+  - name: Site1
+    group_mapping:
+      - ldap: grp12345
+        tableau: LDAP Group 1
+      - ldap: grp67890
+        tableau: LDAP Group 3
+  - name: Site2
+    group_mapping:
+      - ldap: grp54321
+        tableau: LDAP Group 2
