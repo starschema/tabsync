@@ -8,7 +8,7 @@
   (:require [clj-tableau.restapi])
   (:require [postal.core])
   (:require [tabsync.tableau :as tableau]
-            [clj-tableau.restapi :as tapi])
+            [cljtableau.restapi :as tapi])
   (:use [tabsync.ldap]))
 
 ;; Constant for yaml configuration file

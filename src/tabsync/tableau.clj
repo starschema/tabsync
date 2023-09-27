@@ -1,5 +1,5 @@
 (ns tabsync.tableau
-  (:require [clj-tableau.restapi :as tapi]
+  (:require [cljtableau.restapi :as tapi]
             [tabsync.ldap]
             [clojure.tools.logging :as log])
   (:import (clojure.lang ExceptionInfo)))

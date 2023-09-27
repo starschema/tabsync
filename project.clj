@@ -1,4 +1,4 @@
-(defproject tabsync "0.2.1-SNAPSHOT"
+(defproject tabsync "0.2.9-SNAPSHOT"
   :description "Tableau-LDAP Synchronization"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [clj-yaml  "0.4.0"]
                  [clj-http "1.1.0"]
-                 [clj-tableau "1.0.2-SNAPSHOT"]
+                 ;[clj-tableau "1.0.2-SNAPSHOT"]
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/data.zip "0.1.1"]
                  [org.clojure/tools.logging "0.3.1"]
