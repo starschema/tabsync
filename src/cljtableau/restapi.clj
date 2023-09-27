@@ -1,4 +1,4 @@
-(ns clj-tableau.restapi
+(ns cljtableau.restapi
   (:require [clj-http.client]
             [clojure.zip :refer [xml-zip]]
             [clojure.data.zip.xml :refer [xml-> xml1-> attr text]]

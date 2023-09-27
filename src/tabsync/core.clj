@@ -5,7 +5,7 @@
   (:require [clj-ldap.client :as ldap])
   (:require [clojure.string :as str])
   (:require [clojure.data])
-  (:require [clj-tableau.restapi])
+  (:require [cljtableau.restapi])
   (:require [postal.core])
   (:require [tabsync.tableau :as tableau]
             [cljtableau.restapi :as tapi])
@@ -51,7 +51,7 @@
   It also zips the two groups together"
   [site]
   (log/info "Starting with site: " (get site :name))
-  (let [tableau-session (clj-tableau.restapi/logon-to-server
+  (let [tableau-session (cljtableau.restapi/logon-to-server
                           (get-in config-vars [:tableau :url])
                           (get site :name)
                           (get-in config-vars [:tableau :username])
