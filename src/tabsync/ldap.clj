@@ -57,7 +57,6 @@
        (get (yaml/parse-string (slurp config-file)) :group_mapping)))
 
 
-
 (defn get-users-from-group
   "Gets the list of users associated to each LDAP group"
 
@@ -70,7 +69,7 @@
   ([group-id member-list group-list]
     (log/info "[LDAP] Getting users for ldap group " group-id)
     (try
-      (let [group-info (ldap/get ldap-server (str "CN=" group-id ",OU=Groups,DC=CDIAD,dc=corporate,dc=com"))
+      (let [  group-info (ldap/get ldap-server (str "CN=" group-id ",OU=Groups,DC=CDIAD,DC=GE,DC=com"))
               ;; create a list of CNs from the response
               cn-groups (->> (get group-info :member)
                           (list)
@@ -97,11 +96,10 @@
                     (get-users-from-group group-to-add current-member-list new-group-list))
                 initial-member-list groups-to-add))
 
-      (catch Throwable e
-            (log/debug e)
+      (catch Exception e
+            (log/error "Exception occured:" (with-out-str (clojure.stacktrace/print-cause-trace e)))
             ;(log/error (type e) ": " (.getMessage e))
-            (log/error "DL does not exist: " group-id)
+            (log/error "DL not processed or it may not exist: " group-id)
             '()))
 
               ))
-
