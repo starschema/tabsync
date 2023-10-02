@@ -97,7 +97,7 @@
                 initial-member-list groups-to-add))
 
       (catch Exception e
-            (log/error "Exception occured:" (with-out-str (clojure.stacktrace/print-cause-trace e)))
+            (log/debug "Exception occured:" (with-out-str (clojure.stacktrace/print-cause-trace e)))
             ;(log/error (type e) ": " (.getMessage e))
             (log/error "DL not processed or it may not exist: " group-id)
             '()))
