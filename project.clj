@@ -1,4 +1,4 @@
-(defproject tabsync "0.3.8-SNAPSHOT"
+(defproject tabsync "0.3.9-SNAPSHOT"
   :description "Tableau-LDAP Synchronization"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -13,6 +13,7 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [com.draines/postal "1.11.3"]
                  [org.clojars.pntblnk/clj-ldap "0.0.17"]
+                 [nrepl "1.0.0"]
                  [log4j/log4j "1.2.17" :exclusions [javax.mail/mail
                                                     javax.jms/jms
                                                     com.sun.jdmk/jmxtools

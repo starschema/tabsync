@@ -63,7 +63,7 @@
   ;; Single argument is the top-level thing to call and returns a list
   ([group-id]
     (log/info "[LDAP] Starting to fetch full members list for group:" group-id)
-    (apply list (get-users-from-group group-id #{} #{})))
+    (apply list (first (get-users-from-group group-id #{} #{}))))
 
   ;; Three-arg version is for the recursion and returns a set
   ([group-id member-list group-list]
