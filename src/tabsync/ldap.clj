@@ -68,38 +68,46 @@
   ;; Three-arg version is for the recursion and returns a set
   ([group-id member-list group-list]
     (log/info "[LDAP] Getting users for ldap group " group-id)
-    (try
-      (let [  group-info (ldap/get ldap-server (str "CN=" group-id ",OU=Groups,DC=CDIAD,DC=GE,DC=com"))
-              ;; create a list of CNs from the response
-              cn-groups (->> (get group-info :member)
-                          (list)
-                          (flatten)
-                          (map #(second (re-find #"CN=([a-zA-Z0-9]+{9})" %)))
-                          (group-by #(= (get % 0) \g)))
+    (if (contains? group-list group-id)
+      ; If already processed this group then skip it
+      (do
+        (log/info "[LDAP:" group-id "] Group already processed, so skipping ")
+        [member-list group-list])
 
-              ;; the members of the current group
-              members (get cn-groups false)
-              ;; the sub-groups of the current group
-              groups (get cn-groups true)
-              ;; find the groups that aren't yet processed
-              groups-to-add (filter #(not (contains? group-list %)) groups)
-              ;; build a list of groups we've already seen to not process them again
-              new-group-list (clojure.set/union group-list (set groups))
+      ; otherwise process
+      (try
+        (let [  group-info (ldap/get ldap-server (str "CN=" group-id ",OU=Groups,DC=CDIAD,DC=GE,DC=com"))
+                ;; create a list of CNs from the response
+                cn-groups (->> (get group-info :member)
+                            (list)
+                            (flatten)
+                            (map #(second (re-find #"CN=([a-zA-Z0-9]+{9})" %)))
+                            (group-by #(= (get % 0) \g)))
 
-              ; combine the members with the function input members list to start the call
-              initial-member-list (clojure.set/union member-list (set members))]
+                ;; the members of the current group
+                members (get cn-groups false)
+                ;; the sub-groups of the current group
+                groups (get cn-groups true)
+                ;; find the groups that aren't yet processed
+                groups-to-add (filter #(not (contains? group-list %)) groups)
 
-              (log/info "[LDAP:" group-id "] Found " (count members) " members in this group, total member count is at " (count initial-member-list ))
-              (log/info "[LDAP:" group-id "] Found " (count groups) " sub-groups, adding " (count groups-to-add) " sub-groups after duplicate checks:" groups-to-add)
-              (reduce
-                (fn [current-member-list group-to-add]
-                    (get-users-from-group group-to-add current-member-list new-group-list))
-                initial-member-list groups-to-add))
+                ; combine the members with the function input members list to start the call
+                initial-member-list (clojure.set/union member-list (set members))]
 
-      (catch Exception e
-            (log/debug "Exception occured:" (with-out-str (clojure.stacktrace/print-cause-trace e)))
-            ;(log/error (type e) ": " (.getMessage e))
-            (log/error "DL not processed or it may not exist: " group-id)
-            '()))
+                (log/info "[LDAP:" group-id "] Found " (count members) " members in this group, total member count is at " (count initial-member-list ))
+                (log/info "[LDAP:" group-id "] Found " (count groups) " sub-groups, adding " (count groups-to-add) " sub-groups after duplicate checks:" groups-to-add)
+                (reduce
+                  (fn [[current-member-list current-group-list] group-to-add]
+                      (get-users-from-group group-to-add current-member-list current-group-list))
+                  ;; init with the current full group list and initial member list
+                  [initial-member-list (clojure.set/union group-list #{group-id})]
+                  groups-to-add))
+
+        (catch Exception e
+              (log/debug "Exception occured:" (with-out-str (clojure.stacktrace/print-cause-trace e)))
+              ;(log/error (type e) ": " (.getMessage e))
+              (log/error "DL not processed or it may not exist: " group-id " -- error: " (take 3 (clojure.string/split-lines (with-out-str (clojure.stacktrace/print-cause-trace e)))))
+              [member-list group-list]
+              )))
 
               ))
