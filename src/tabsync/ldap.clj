@@ -11,8 +11,7 @@
   (def ldap-server
     (ldap/connect {:host     host
                    :ssl?     ssl
-                   :bind-dn  (str "CN=" username ",ou=All Businesses,dc=CDIAD,dc=GE,dc=com")
-;;                   :bind-dn  (str "gessouid=" username ",ou=geworker,o=ge.com")
+                   :bind-dn  username
                    :password password
                    })))
 
