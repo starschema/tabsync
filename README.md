@@ -1,6 +1,6 @@
 ﻿# Tableau Server - LDAP Synchronization [![Build Status](https://travis-ci.org/starschema/tabsync.svg?branch=master)](https://travis-ci.org/starschema/tabsync)
 
-TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any LDAP server. It synchronizes LDAP groups with Tableau groups. 
+TabSync is a bi-directional replication tool between Tableau Server 9.0+ and any LDAP server. It synchronizes LDAP groups with Tableau groups.
 
  * Synchronizes multiple ldap groups with multiple tableau groups on multiple sites
  * Adds all users to tableau site who are defined in ldap but not existing in tableau
@@ -49,21 +49,21 @@ The bind-dn format listed in the config file is specific to our environment and 
       host: ldap.domain.com:389
       username: "cn=administrator,ou=Sample,dc=AD,dc=company,dc=com"
       password: administrator
-      
+
     ad:
       domain: local
-      
+
     email:
       from: tableau.sync.script@company.com
       to: john.doe@company.com
       subject: Tableau Sync Script Report
-      
+
     tableau:
       url: "http://127.0.0.1:8000/"
       version: 9
       username: tableauadmin
       password: password
-      
+
     sites:
       - name: Site1
         group_mapping:
@@ -102,9 +102,9 @@ And finally simply execute the uberjar you created earlier:
 
 ## Examples
 
-You should modify two functions in order to use your own LDAP schema for getting users from a group and their user info. 
+You should modify two functions in order to use your own LDAP schema for getting users from a group and their user info.
 
-_Example 1_: Get detailed user info. Use `employeNumber` ldap attribute as username, `displayName` as full name, `email` as email.  
+_Example 1_: Get detailed user info. Use `employeNumber` ldap attribute as username, `displayName` as full name, `email` as email.
 
 ```clojure
 (defn get-user-info
@@ -117,7 +117,7 @@ _Example 1_: Get detailed user info. Use `employeNumber` ldap attribute as usern
 ```
 
 
-_Example 2_: Get users from group. First search for group in `OU=Groups` as `CN=group-id`, then take the first nine letters from the returned CNs. 
+_Example 2_: Get users from group. First search for group in `OU=Groups` as `CN=group-id`, then take the first nine letters from the returned CNs.
 
 ```clojure
 (defn get-users-from-group
@@ -139,7 +139,27 @@ _Example 2_: Get users from group. First search for group in `OU=Groups` as `CN=
         (distinct))))
 ```
 
-Feel free to change these parts according to your LDAP scheme. 
+Feel free to change these parts according to your LDAP scheme.
+
+
+# Potential errors
+
+### Java module access problems
+
+
+Some JVM / JDK installations Java will compain about module accessibility in `java.xml` with error messages along the following line:
+
+```
+class clojure.lang.Reflector cannot access class com.sun.xml.internal.stream.XMLInputFactoryImpl (in module java.xml) because module java.xml does not export com.sun.xml.internal.stream to unnamed module
+```
+
+This can be solved by adding the `--add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED` command-line switch to the starting command:
+
+```
+java --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED -jar ...
+```
+
+
 
 ## License
 
