@@ -8,14 +8,20 @@
 
 (def ^:dynamic page-size 1000)
 
+;; The Tableau REST API version to use
+(def TABLEAU-API-VERSION "3.17")
+
+;; The path for the Tableau API calls
+(def TABLEAU-API-PATH (str "/api/" TABLEAU-API-VERSION))
+
 (defn- tableau-url-for
   "Constructs server API url. Target can be hostname or session returned from logon-to-server"
   [target api-path]
   (if (= (type target) java.lang.String)
     ; connect to host
-    (str target "/api/2.0" api-path)
+    (str target TABLEAU-API-PATH api-path)
     ; connect to already established session (target )
-    (str (get target :host) "/api/2.0"
+    (str (get target :host) TABLEAU-API-PATH
          (if (= api-path "/auth/signout")
            api-path
            (str "/sites/" (get target :siteid) "/" api-path)))))

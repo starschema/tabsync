@@ -50,6 +50,10 @@ The bind-dn format listed in the config file is specific to our environment and 
       username: "cn=administrator,ou=Sample,dc=AD,dc=company,dc=com"
       password: administrator
 
+    queries:
+      group: "CN=$$$,ou=Groups,dc=cdiad,dc=domain,dc=com"
+      user: "CN=$$$,OU=All Businesses,DC=CDIAD,DC=GE,DC=com"
+
     ad:
       domain: local
 
@@ -98,6 +102,15 @@ If it is not pointing to Java version 1.8 then you need to set it:
 And finally simply execute the uberjar you created earlier:
 
     $ java -jar tabsync-0.1.0-standalone.jar [args]
+
+
+### Setting up the queries
+
+The queries used for fetching Groups and Users from LDAP can be changed by setting them in the config file in the `queries` section:
+
+`user` sets the query used for getting the user information and `group` sets the query used for getting group membership information.
+
+The `$$$` token in a query will be replaced by the user or group id.
 
 
 ## Examples

@@ -90,7 +90,11 @@
   [& args]
   (log/info "Parsing configuration..")
   (try
+    ;; TODO: this `map val ...` thing is a very bad idea here -- keys are discarded and only the order matters...
     (connect-ldap-server (vec (map val (get config-vars :ldap))))
+
+    ;; Setup the LDAP queries for the LDAP module from the config
+    (tabsync.ldap/setup-ldap-queries (get config-vars :queries))
 
     (dorun (get-tableau-sites config-vars))
 
@@ -104,7 +108,6 @@
       (log/fatal (.getMessage e))
       (.printStackTrace e)
       (log/error e)
-      (def szopsz e)
       (log/error (.getStackTrace e))
       )
     )

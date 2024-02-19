@@ -3,6 +3,11 @@ ldap:
   username: "cn=administrator,ou=Sample,dc=AD,dc=company,dc=com"
   password: administrator
 
+# The LDAP queries used by
+queries:
+  group: "CN=$$$,ou=Groups,dc=cdiad,dc=domain,dc=com"
+  user: "CN=$$$,OU=All Businesses,DC=CDIAD,DC=domain,DC=com"
+
 ad:
   domain: local
 
