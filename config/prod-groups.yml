@@ -13,7 +13,7 @@ email:
 
 tableau:
   url: "http://127.0.0.1:8000/"
-  version: 9
+  version: "3.17"
   username: tableauadmin
   password: password
 

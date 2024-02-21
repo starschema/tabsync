@@ -1,4 +1,4 @@
-(defproject tabsync "0.4.4-SNAPSHOT"
+(defproject tabsync "0.4.5-SNAPSHOT"
   :description "Tableau-LDAP Synchronization"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"

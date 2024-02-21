@@ -8,20 +8,39 @@
 
 (def ^:dynamic page-size 1000)
 
-;; The Tableau REST API version to use
-(def TABLEAU-API-VERSION "3.17")
 
-;; The path for the Tableau API calls
-(def TABLEAU-API-PATH (str "/api/" TABLEAU-API-VERSION))
+;; REST API CONFIG BITS
+;; --------------------
+
+;; The default API version to use
+(def TABLEAU-API-DEFAULT-VERSION "3.17")
+
+(defn- sanitize-api-version
+  "Ensures that only strings can be used as REST API versions -- old config files have numerical version which is not compatible"
+  [v] (if (string? v) v TABLEAU-API-DEFAULT-VERSION))
+
+;; Ugly global setter for the REST API details
+(defn setup-tableau-api-config
+  "Updates the Tableau REST API details from the config (or user default ones)"
+  [{version :version
+    :or {version TABLEAU-API-DEFAULT-VERSION}}]
+
+  (def tableau-api-config {:version version})
+  (def tableau-api-version (sanitize-api-version version))
+  (def tableau-api-base-path (str "/api/" (sanitize-api-version version))))
+
+
+;; HTTP HELPERS
+;; ------------
 
 (defn- tableau-url-for
   "Constructs server API url. Target can be hostname or session returned from logon-to-server"
   [target api-path]
   (if (= (type target) java.lang.String)
     ; connect to host
-    (str target TABLEAU-API-PATH api-path)
+    (str target tableau-api-base-path api-path)
     ; connect to already established session (target )
-    (str (get target :host) TABLEAU-API-PATH
+    (str (get target :host) tableau-api-base-path
          (if (= api-path "/auth/signout")
            api-path
            (str "/sites/" (get target :siteid) "/" api-path)))))

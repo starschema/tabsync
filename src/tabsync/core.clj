@@ -96,6 +96,9 @@
     ;; Setup the LDAP queries for the LDAP module from the config
     (tabsync.ldap/setup-ldap-queries (get config-vars :queries))
 
+    ;; Setup the tableau api config
+    (cljtableau.restapi/setup-tableau-api-config (get config-vars :tableau))
+
     (dorun (get-tableau-sites config-vars))
 
     (log/info "Synchronization completed")

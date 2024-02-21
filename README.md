@@ -64,7 +64,8 @@ The bind-dn format listed in the config file is specific to our environment and 
 
     tableau:
       url: "http://127.0.0.1:8000/"
-      version: 9
+      # The value of 'version' must be a string, so always use qoutes around it
+      version: "3.17"
       username: tableauadmin
       password: password
 
