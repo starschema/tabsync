@@ -1,5 +1,5 @@
 (ns tabsync.tableau
-  (:require [clj-tableau.restapi :as tapi]
+  (:require [cljtableau.restapi :as tapi]
             [tabsync.ldap]
             [clojure.tools.logging :as log])
   (:import (clojure.lang ExceptionInfo)))
@@ -9,7 +9,7 @@
 (defn populate-user-list-with-site-users
   [session]
   (log/info "Populate user list")
-  (reset! user-list (tapi/get-users-on-site session))
+  (reset! user-list (clojure.set/map-invert (tapi/get-users-on-site session)))
   (log/info "Found" (count @user-list) "users"))
 
 (defn does-user-exist?
@@ -18,8 +18,8 @@
   (get @user-list username))
 
 (defn add-users-to-site-and-group
-  [session group users]
-  (log/debug "add-users-to-site-and-group" group " -> " users)
+  [session group site-role users]
+  (log/info "add-users-to-site-and-group" group " -> " users)
   (let [group-id (tapi/get-group-id session group)]
     (if-not (nil? group-id)
       (dorun
@@ -35,14 +35,12 @@
                        ; we need to add the user to the site
                        (do
                          (log/debug "user" user "does not exist on this site")
-                         (let [user-id (tapi/add-user session user)
+                         (let [user-id (tapi/add-user session user site-role)
                                user-info (tabsync.ldap/get-user-info user)]
                            (if-not user-id
-                             ; user was added just now?
-                             ; TODO: check again
                              (get @user-list user)
-                             ; User created successfully
                              (do
+                               (swap! user-list conj {user user-id})
                                (tapi/update-user session user-id (get user-info :name) (get user-info :mail))
                                user-id))))))
                    users))
@@ -58,7 +56,7 @@
       (map (fn [user]
              (if user
                (do
-                 (log/debug "Removing user " user " with id " (get @user-list user) " from group " group)
+                 (log/info "Removing user " user " with id " (get @user-list user) " from group " group)
                  (tapi/remove-user-from-tableau-group
                    session group-id (get @user-list user))))) users))))
 
@@ -67,4 +65,4 @@
   (let [groupid (tapi/get-group-id session group)]
     (if groupid
       (tapi/get-users-from-group session groupid)
-      (log/error "Unable to get group ID. Please double check group name."))))
+      (log/error "Unable to get group ID. Please double check group name: " group))))

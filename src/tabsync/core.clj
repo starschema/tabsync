@@ -5,20 +5,20 @@
   (:require [clj-ldap.client :as ldap])
   (:require [clojure.string :as str])
   (:require [clojure.data])
-  (:require [clj-tableau.restapi])
+  (:require [cljtableau.restapi])
   (:require [postal.core])
   (:require [tabsync.tableau :as tableau]
-            [clj-tableau.restapi :as tapi])
+            [cljtableau.restapi :as tapi])
   (:use [tabsync.ldap]))
 
 ;; Constant for yaml configuration file
-(def yaml-file "./config/groups.yml")
+(def yaml-file "./config/prod-groups.yml")
 
 (def config-vars (yaml/parse-string (slurp yaml-file)))
 
 (defn send-email
-  [email-params]
-  (postal.core/send-message {:host "localhost"}
+  [smtp email-params]
+  (postal.core/send-message {:host smtp}
                             (merge email-params
                                    {:body
                                     (str
@@ -44,14 +44,14 @@
 (defn return-tableau-users
   [session tableau-group]
   (log/info "Getting users for TABLEAU group: " tableau-group)
-  (tableau/get-users-from-tableau-group session tableau-group))
+  (vals (tableau/get-users-from-tableau-group session tableau-group)))
 
 (defn synchronize-site
   "This function creates a list for tableau and a list for ldap groups.
   It also zips the two groups together"
   [site]
   (log/info "Starting with site: " (get site :name))
-  (let [tableau-session (clj-tableau.restapi/logon-to-server
+  (let [tableau-session (cljtableau.restapi/logon-to-server
                           (get-in config-vars [:tableau :url])
                           (get site :name)
                           (get-in config-vars [:tableau :username])
@@ -66,14 +66,15 @@
                   (set (return-tableau-users tableau-session (get group :tableau)))
                   (set (return-ldap-users (get group :ldap)))
                   )]
-            (log/debug "Group differences " difference)
-            ;(tabsync.tableau/remove-users-from-group
-            ;  tableau-session
-            ;  (get group :tableau)
-            ;  (first difference))
+            (log/info "Group differences " difference)
+            (tabsync.tableau/remove-users-from-group
+              tableau-session
+              (get group :tableau)
+              (first difference))
             (tabsync.tableau/add-users-to-site-and-group
               tableau-session
               (get group :tableau)
+              (get group :site-role)
               (second difference))))
         (get site :group_mapping)))
     (tapi/signout tableau-session)))
@@ -89,7 +90,14 @@
   [& args]
   (log/info "Parsing configuration..")
   (try
+    ;; TODO: this `map val ...` thing is a very bad idea here -- keys are discarded and only the order matters...
     (connect-ldap-server (vec (map val (get config-vars :ldap))))
+
+    ;; Setup the LDAP queries for the LDAP module from the config
+    (tabsync.ldap/setup-ldap-queries (get config-vars :queries))
+
+    ;; Setup the tableau api config
+    (cljtableau.restapi/setup-tableau-api-config (get config-vars :tableau))
 
     (dorun (get-tableau-sites config-vars))
 
@@ -100,13 +108,15 @@
       (log/debug "Critical problem " (ex-data e))
       )
     (catch Exception e
-      (log/error (.getMessage e))
-      (log/debug (.getStackTrace e))
+      (log/fatal (.getMessage e))
+      (.printStackTrace e)
+      (log/error e)
+      (log/error (.getStackTrace e))
       )
     )
 
   (log/debug "Sending out email")
-  (send-email (get config-vars :email))
+  (send-email  (get config-vars :smtp) (get config-vars :email))
   ;(shutdown-agents)
   )
 
